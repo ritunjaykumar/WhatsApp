@@ -45,6 +45,7 @@ public class SetUserInfoActivity extends AppCompatActivity {
 
     private ProgressDialog progressDialog;
     private String downloadUrl = "";
+    
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
