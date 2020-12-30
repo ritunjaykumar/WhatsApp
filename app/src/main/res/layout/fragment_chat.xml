@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".widgets.ChatFragment">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_chat_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+        <LinearLayout
+            android:id="@+id/ll_invite"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/large">
+
+            <TextView
+                android:id="@+id/textView11"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/medium"
+                android:gravity="center"
+                android:text="Invite Your Friends"
+                android:textColor="@color/primary_text"
+                android:textSize="@dimen/extreme_large_size" />
+
+            <TextView
+                android:id="@+id/textView12"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/medium"
+                android:gravity="center"
+                android:text="None of your contacts are using WhatsApp Use below button to invite them"
+                android:textColor="@color/primary_text"
+                android:textSize="@dimen/medium_size" />
+
+            <Button
+                android:id="@+id/btn_invite"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/large"
+                android:background="@drawable/bg_button"
+                android:text="Invite your friends"
+                android:textAllCaps="false"
+                android:textSize="@dimen/medium_size" />
+
+            <TextView
+                android:id="@+id/textView13"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="TextView" />
+        </LinearLayout>
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_action"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/very_large"
+            android:layout_marginBottom="@dimen/value_32"
+            android:layout_gravity="end|bottom"
+            android:background="@color/colorSecondaryVariant"
+            android:contentDescription="floating button"
+            android:src="@drawable/ic_chat"
+            app:tint="@color/white" />
+
+    </FrameLayout>
+</layout>

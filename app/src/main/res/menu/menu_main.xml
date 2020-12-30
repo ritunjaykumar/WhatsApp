@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/menu_search"
+        android:icon="@drawable/ic_search"
+        android:title="@string/search"
+        app:showAsAction="ifRoom" />
+    <group android:checkableBehavior="none">
+
+        <item
+            android:id="@+id/menu_group"
+            android:title="New Group"
+            app:showAsAction="never" />
+        <item
+            android:id="@+id/menu_broadcast"
+            android:title="New Broadcast"
+            app:showAsAction="never" />
+        <item
+            android:id="@+id/menu_web"
+            android:title="WhatsApp Web"
+            app:showAsAction="never" />
+        <item
+            android:id="@+id/menu_stared"
+            android:title="Stared Message"
+            app:showAsAction="never" />
+        <item
+            android:id="@+id/menu_setting"
+            android:title="setting"
+            app:showAsAction="never" />
+    </group>
+</menu>

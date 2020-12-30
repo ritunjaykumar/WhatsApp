@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="value_32">32dp</dimen>
+
+    <dimen name="very_small">8dp</dimen>
+    <dimen name="small">12dp</dimen>
+    <dimen name="medium">14dp</dimen>
+    <dimen name="large">16dp</dimen>
+    <dimen name="very_large">18dp</dimen>
+    <dimen name="extreme_large">20dp</dimen>
+
+    <dimen name="very_small_size">8sp</dimen>
+    <dimen name="small_size">12sp</dimen>
+    <dimen name="medium_size">14sp</dimen>
+    <dimen name="large_size">16sp</dimen>
+    <dimen name="very_large_size">18sp</dimen>
+    <dimen name="extreme_large_size">20sp</dimen>
+    <dimen name="app_bar_height">180dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="text_margin">16dp</dimen>
+</resources>
