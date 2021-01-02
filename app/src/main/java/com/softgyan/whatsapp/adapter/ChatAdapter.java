@@ -9,25 +9,33 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.softgyan.whatsapp.R;
 import com.softgyan.whatsapp.models.Chats;
 
 import java.util.List;
 
 public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
-    private List<Chats> chatsList;
+    private final List<Chats> chatsList;
     private final Context mContext;
     public static final int MSG_TYPE_LEFT = 0;
-    public static final int MSG_TYPE_RIGHT = 0;
+    public static final int MSG_TYPE_RIGHT = 1;
+    private final FirebaseUser authUser ;
 
     public ChatAdapter(List<Chats> chatsList, Context mContext) {
         this.chatsList = chatsList;
         this.mContext = mContext;
+        authUser = FirebaseAuth.getInstance().getCurrentUser();
     }
 
     @Override
     public int getItemViewType(int position) {
-        return 1;
+        if(chatsList.get(position).getSender().equals(authUser.getUid())){
+            return MSG_TYPE_RIGHT;
+        }else{
+            return MSG_TYPE_LEFT;
+        }
     }
 
     @NonNull
@@ -35,19 +43,18 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view;
         LayoutInflater layoutInflater = LayoutInflater.from(mContext);
-        if (viewType == MSG_TYPE_LEFT) {
-            view = layoutInflater.inflate(R.layout.layout_chat_item_left, parent, false);
-            return new ViewHolder(view);
-        } else {
+        if (viewType == MSG_TYPE_RIGHT) {
             view = layoutInflater.inflate(R.layout.layout_chat_item_right, parent, false);
-            return new ViewHolder(view);
+        } else {
+            view = layoutInflater.inflate(R.layout.layout_chat_item_left, parent, false);
         }
+        return new ViewHolder(view);
 
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-
+        holder.messageBind(chatsList.get(position));
     }
 
     @Override

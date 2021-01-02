@@ -3,6 +3,7 @@ package com.softgyan.whatsapp.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,6 +49,7 @@ public class ContactListsAdapter extends RecyclerView.Adapter<ContactListsAdapte
         holder.itemView.setOnClickListener(view->{
             Intent intent =new Intent(mContext, ChatActivity.class);
             Bundle bundle = new Bundle();
+            Log.d("my_tag","contact activity : "+ users.getUserId()); //debugging
             bundle.putString(Var.USER_NAME, users.getUserName());
             bundle.putString(Var.USER_ID, users.getUserId());
             bundle.putString(Var.IMAGE_PROFILE, users.getImageProfile());

@@ -6,6 +6,7 @@ import androidx.databinding.DataBindingUtil;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -63,7 +64,6 @@ public class ContactActivity extends AppCompatActivity {
                         String userName = ds.getString(Var.USER_NAME);
                         String status = ds.getString(Var.STATUS);
                         String profileUrl = ds.getString(Var.IMAGE_PROFILE);
-
                         Users  users = new Users();
                         users.setStatus(status);
                         users.setUserId(userId);

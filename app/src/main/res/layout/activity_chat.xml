@@ -69,11 +69,11 @@
             android:id="@+id/rv_chat"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:paddingTop="@dimen/very_small"
             android:layout_above="@id/ll_chat_container"
             android:layout_below="@id/app_bar"
-            android:background="#B8B6B6"
-            android:orientation="vertical"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+            android:scrollbars="vertical"
+            android:background="#B8B6B6" />
 
         <LinearLayout
             android:id="@+id/ll_chat_container"
