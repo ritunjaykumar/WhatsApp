@@ -8,13 +8,24 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.softgyan.whatsapp.R;
 import com.softgyan.whatsapp.adapter.ChatListAdapter;
+import com.softgyan.whatsapp.databinding.FragmentChatBinding;
 import com.softgyan.whatsapp.models.ChatList;
+import com.softgyan.whatsapp.utils.variables.Var;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,11 +36,13 @@ public class ChatFragment extends Fragment {
         // Required empty public constructor
     }
 
+    private FragmentChatBinding binding;
     private static ChatFragment chatFragment;
-    private List<ChatList> chatLists = new ArrayList();
-    private RecyclerView rvChatList;
+    private List<ChatList> chatLists;
     private ChatListAdapter chatListAdapter;
-    private FloatingActionButton fabCall;
+    private FirebaseUser authUser;
+    private DatabaseReference dbReference;
+    private ArrayList<String> allUserId;
 
     public static ChatFragment getInstance() {
         if (chatFragment == null) {
@@ -48,35 +61,80 @@ public class ChatFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_chat, container, false);
-        rvChatList = view.findViewById(R.id.rv_chat_list);
-        fabCall = view.findViewById(R.id.fab_action);
-        return view;
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_chat, container, false);
+        authUser = FirebaseAuth.getInstance().getCurrentUser();
+        dbReference = FirebaseDatabase.getInstance().getReference();
+        chatLists = new ArrayList<>();
+        allUserId = new ArrayList<>();
+        chatListAdapter = new ChatListAdapter(chatLists);
+        binding.rvChatList.setAdapter(chatListAdapter);
+        return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        chatListAdapter = new ChatListAdapter(chatLists);
-        rvChatList.setAdapter(chatListAdapter);
-        fabCall.setOnClickListener(new View.OnClickListener() {
+        binding.fabAction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getContext(), ContactActivity.class));
             }
         });
+
+        getChatList();
     }
 
     private void getChatList() {
-        String img1 ="https://static.toiimg.com/photo/msid-77142971/77142971.jpg";
-        String img2 ="https://i.ytimg.com/vi/zCcGRZ9kAhU/maxresdefault.jpg";
-        String img3 = "https://i.ytimg.com/vi/csAPrTKNJPY/maxresdefault.jpg";
-        String img4 ="https://vignette.wikia.nocookie.net/motu-patlu/images/3/3e/Profile_motu2.png";
-        String img5 ="https://vignette.wikia.nocookie.net/jorjorswackyjourney/images/1/18/Motu_patlu.jpg";
-        chatLists.add(new ChatList("11", "Ritunjay", "hi", "12/02/2002", img1));
-        chatLists.add(new ChatList("11", "Arunjay", "good morning", "10/03/2020", img2));
-        chatLists.add(new ChatList("11", "Richa", "good night", "24/03/2002", img3));
-        chatLists.add(new ChatList("11", "Renu", "have you dinner", "01/05/2002", img4));
-        chatLists.add(new ChatList("11", "Jyoti", "come to my home", "01/01/2002", img5));
+        dbReference.child("ChatList").child(authUser.getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                chatLists.clear();
+                allUserId.clear();
+                for (DataSnapshot ds : snapshot.getChildren()) {
+                    String userId = ds.child("chat_id").getValue().toString();
+                    allUserId.add(userId);
+
+                }
+                getUserData();
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+
+    // getUserInfo
+    private void getUserData() {
+        for (String user_id : allUserId) {
+            FirebaseFirestore.getInstance().collection("Users")
+                    .document(user_id)
+                    .get()
+                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            try {
+
+                                ChatList chatList = new ChatList(
+                                        documentSnapshot.getString(Var.USER_ID),
+                                        documentSnapshot.getString(Var.USER_NAME),
+                                        documentSnapshot.getString(Var.STATUS),
+                                        documentSnapshot.getString(Var.USER_ID),
+                                        documentSnapshot.getString(Var.IMAGE_PROFILE)
+                                );
+                                chatLists.add(chatList);
+                                if(chatListAdapter != null){
+                                    chatListAdapter.notifyDataSetChanged();
+                                }
+
+                            } catch (Exception ex) {
+                                ex.printStackTrace();
+                            }
+                        }
+                    });
+        }
     }
 }

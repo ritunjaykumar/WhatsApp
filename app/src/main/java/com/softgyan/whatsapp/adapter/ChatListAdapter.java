@@ -1,5 +1,8 @@
 package com.softgyan.whatsapp.adapter;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,13 +16,15 @@ import com.bumptech.glide.Glide;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.softgyan.whatsapp.R;
 import com.softgyan.whatsapp.models.ChatList;
+import com.softgyan.whatsapp.utils.variables.Var;
+import com.softgyan.whatsapp.widgets.ChatActivity;
 
 import java.util.List;
 
 import javax.crypto.spec.IvParameterSpec;
 
 public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ChatViewHolder> {
-    private List<ChatList> chatLists ;
+    private final List<ChatList> chatLists ;
 
     public ChatListAdapter(List<ChatList> chatLists) {
         this.chatLists = chatLists;
@@ -42,6 +47,15 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ChatVi
                 .load(chatList.getUrlProfile())
                 .placeholder(R.drawable.ic_place_holder)
                 .into(holder.ivProfile);
+        holder.itemView.setOnClickListener(View->{
+            Intent intent =new Intent(holder.itemView.getContext(), ChatActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putString(Var.USER_NAME, chatList.getUserName());
+            bundle.putString(Var.USER_ID, chatList.getUserId());
+            bundle.putString(Var.IMAGE_PROFILE, chatList.getUrlProfile());
+            intent.putExtra(Var.USERS,bundle);
+            holder.itemView.getContext().startActivity(intent);
+        });
     }
 
     @Override
