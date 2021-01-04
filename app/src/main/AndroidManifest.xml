@@ -14,7 +14,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.WhatsApp">
-        <activity android:name=".widgets.ChatActivity"></activity>
+        <activity android:name=".widgets.UserProfileActivity"></activity>
+        <activity android:name=".widgets.ChatActivity" />
         <activity android:name=".widgets.ContactActivity" />
         <activity android:name=".widgets.ViewImageActivity" />
         <activity android:name=".widgets.ProfileActivity" />

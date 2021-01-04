@@ -5,12 +5,14 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -85,6 +87,7 @@ public class ChatFragment extends Fragment {
     }
 
     private void getChatList() {
+        binding.progressBar.setVisibility(View.VISIBLE);
         dbReference.child("ChatList").child(authUser.getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -96,12 +99,12 @@ public class ChatFragment extends Fragment {
 
                 }
                 getUserData();
-
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                Toast.makeText(getContext(), "", Toast.LENGTH_SHORT).show();
+                binding.progressBar.setVisibility(View.GONE);
             }
         });
     }
@@ -113,27 +116,29 @@ public class ChatFragment extends Fragment {
             FirebaseFirestore.getInstance().collection("Users")
                     .document(user_id)
                     .get()
-                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                        @Override
-                        public void onSuccess(DocumentSnapshot documentSnapshot) {
-                            try {
+                    .addOnSuccessListener(documentSnapshot -> {
+                        try {
 
-                                ChatList chatList = new ChatList(
-                                        documentSnapshot.getString(Var.USER_ID),
-                                        documentSnapshot.getString(Var.USER_NAME),
-                                        documentSnapshot.getString(Var.STATUS),
-                                        documentSnapshot.getString(Var.USER_ID),
-                                        documentSnapshot.getString(Var.IMAGE_PROFILE)
-                                );
-                                chatLists.add(chatList);
-                                if(chatListAdapter != null){
-                                    chatListAdapter.notifyDataSetChanged();
-                                }
-
-                            } catch (Exception ex) {
-                                ex.printStackTrace();
+                            ChatList chatList = new ChatList(
+                                    documentSnapshot.getString(Var.USER_ID),
+                                    documentSnapshot.getString(Var.USER_NAME),
+                                    documentSnapshot.getString(Var.STATUS),
+                                    "",
+                                    documentSnapshot.getString(Var.IMAGE_PROFILE)
+                            );
+                            chatLists.add(chatList);
+                            if (chatListAdapter != null) {
+                                chatListAdapter.notifyDataSetChanged();
                             }
+                            binding.progressBar.setVisibility(View.GONE);
+
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                            binding.progressBar.setVisibility(View.GONE);
                         }
+                    }).addOnFailureListener(e -> {
+                        Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                        binding.progressBar.setVisibility(View.GONE);
                     });
         }
     }

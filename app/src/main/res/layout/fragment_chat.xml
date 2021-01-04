@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".widgets.ChatFragment">
@@ -19,9 +19,9 @@
             android:id="@+id/ll_invite"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"
             android:orientation="vertical"
-            android:padding="@dimen/large">
+            android:padding="@dimen/large"
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/textView11"
@@ -52,19 +52,33 @@
                 android:text="Invite your friends"
                 android:textAllCaps="false"
                 android:textSize="@dimen/medium_size" />
-            
+
         </LinearLayout>
+
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab_action"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
             android:layout_marginEnd="@dimen/very_large"
             android:layout_marginBottom="@dimen/value_32"
-            android:layout_gravity="end|bottom"
             android:background="@color/colorSecondaryVariant"
             android:contentDescription="floating button"
             android:src="@drawable/ic_chat"
             app:tint="@color/white" />
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:background="@drawable/bg_button"
+            android:backgroundTint="@color/white"
+            android:elevation="4dp"
+            android:padding="@dimen/very_small"
+            android:visibility="visible" />
+
 
     </FrameLayout>
 </layout>

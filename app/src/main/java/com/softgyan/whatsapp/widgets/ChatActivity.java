@@ -1,6 +1,7 @@
 package com.softgyan.whatsapp.widgets;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -38,6 +39,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * ** bundle data of receiver contact **
@@ -46,6 +48,9 @@ import java.util.List;
  * image_profile
  */
 public class ChatActivity extends AppCompatActivity {
+    public static final String RECEIVER_ID = "receiver_id";
+    public static final String RECEIVER_PROFILE = "receiver_profile";
+    public static final String RECEIVER_NAME = "receiver_name";
     private ActivityChatBinding mBinding;
     private FirebaseUser authUser;
     private DatabaseReference dbReference;
@@ -107,6 +112,7 @@ public class ChatActivity extends AppCompatActivity {
         layoutManager.setStackFromEnd(true);
         mBinding.rvChat.setLayoutManager(layoutManager);
 
+
         readChat();
     }
 
@@ -166,14 +172,10 @@ public class ChatActivity extends AppCompatActivity {
                     chatsList.clear();
                     for (DataSnapshot ds : snapshot.getChildren()) {
                         Chats ch = ds.getValue(Chats.class);
-                        // i debugged here
-//                        Log.d("my_tag", "sender_id getUi " + authUser.getUid());
-//                        Log.d("my_tag", "sender_id getSender " + ch.getSender());
-//                        Log.d("my_tag", "receiver_di getReceiver " + ch.getReceiver());
-//                        Log.d("my_tag", "receiver_di receiver_id " + receiverId);
 
-//                        if (ch != null && ch.getSender().equals(authUser.getUid()) && ch.getReceiver().equals(receiverId)) {
-                        if (receiverId.equals(ch.getSender()) || authUser.getUid().equals(ch.getSender())) {
+                        if (ch != null && ch.getSender().equals(authUser.getUid()) && ch.getReceiver().equals(receiverId)
+                            || Objects.requireNonNull(ch).getReceiver().equals(authUser.getUid()) && ch.getSender().equals(receiverId)) {
+//                        if (receiverId.equals(ch.getSender()) || authUser.getUid().equals(ch.getSender())) {
                             chatsList.add(ch);
                         }
                     }
@@ -199,10 +201,19 @@ public class ChatActivity extends AppCompatActivity {
     private void setData(Bundle bundle) {
         mBinding.tvUserName.setText(bundle.getString(Var.USER_NAME));
         receiverId = bundle.getString(Var.USER_ID, null);
+        String receiverProfile = bundle.getString(Var.IMAGE_PROFILE);
+        String receiverName = bundle.getString(Var.USER_NAME);
         Glide.with(this)
-                .load(bundle.getString(Var.IMAGE_PROFILE))
+                .load(receiverProfile)
                 .placeholder(R.drawable.ic_place_holder)
                 .into(mBinding.sivProfile);
+        mBinding.llProfileContainer.setOnClickListener(v ->{
+            Intent intent =new Intent(ChatActivity.this, UserProfileActivity.class);
+            intent.putExtra(RECEIVER_ID,receiverId);
+            intent.putExtra(RECEIVER_PROFILE, receiverProfile );
+            intent.putExtra(RECEIVER_NAME, receiverName );
+            startActivity(intent);
+        });
     }
 
     @Override

@@ -13,4 +13,5 @@ public class Var {
     public static final String STATUS = "status";
     public static final String BIO = "bio";
 
+    public static final String DATE = "date";
 }
