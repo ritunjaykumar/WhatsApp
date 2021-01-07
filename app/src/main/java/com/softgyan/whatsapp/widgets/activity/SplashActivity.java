@@ -1,22 +1,14 @@
-package com.softgyan.whatsapp.widgets;
+package com.softgyan.whatsapp.widgets.activity;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.softgyan.whatsapp.R;
 import com.softgyan.whatsapp.utils.UserDetails;
-
-import java.util.HashMap;
 
 public class SplashActivity extends AppCompatActivity {
 

@@ -2,11 +2,9 @@ package com.softgyan.whatsapp.adapter;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -17,11 +15,9 @@ import com.google.android.material.imageview.ShapeableImageView;
 import com.softgyan.whatsapp.R;
 import com.softgyan.whatsapp.models.ChatList;
 import com.softgyan.whatsapp.utils.variables.Var;
-import com.softgyan.whatsapp.widgets.ChatActivity;
+import com.softgyan.whatsapp.widgets.activity.ChatActivity;
 
 import java.util.List;
-
-import javax.crypto.spec.IvParameterSpec;
 
 public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ChatViewHolder> {
     private final List<ChatList> chatLists ;

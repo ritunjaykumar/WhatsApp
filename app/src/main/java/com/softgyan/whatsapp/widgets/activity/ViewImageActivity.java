@@ -1,4 +1,4 @@
-package com.softgyan.whatsapp.widgets;
+package com.softgyan.whatsapp.widgets.activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;

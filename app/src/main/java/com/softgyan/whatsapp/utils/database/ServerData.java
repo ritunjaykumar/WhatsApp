@@ -2,24 +2,16 @@ package com.softgyan.whatsapp.utils.database;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.provider.MediaStore;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.softgyan.whatsapp.R;
-import com.softgyan.whatsapp.utils.UserDetails;
 import com.softgyan.whatsapp.utils.variables.Var;
-import com.softgyan.whatsapp.widgets.ProfileActivity;
 
-import java.io.IOException;
 import java.util.HashMap;
 
 public class ServerData {

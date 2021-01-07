@@ -1,4 +1,4 @@
-package com.softgyan.whatsapp.widgets;
+package com.softgyan.whatsapp.widgets.activity;
 
 import android.os.Bundle;
 import android.view.MenuItem;

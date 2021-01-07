@@ -14,23 +14,24 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.WhatsApp">
-        <activity android:name=".widgets.UserProfileActivity"></activity>
-        <activity android:name=".widgets.ChatActivity" />
-        <activity android:name=".widgets.ContactActivity" />
-        <activity android:name=".widgets.ViewImageActivity" />
-        <activity android:name=".widgets.ProfileActivity" />
-        <activity android:name=".widgets.SettingActivity" />
-        <activity android:name=".widgets.SetUserInfoActivity" />
-        <activity android:name=".widgets.PhoneLoginActivity" />
-        <activity android:name=".widgets.WelcomeActivity" />
-        <activity android:name=".widgets.SplashActivity">
+        <activity android:name=".widgets.activity.ReviewImageChatActivity"></activity>
+        <activity android:name=".widgets.activity.UserProfileActivity" />
+        <activity android:name=".widgets.activity.ChatActivity" />
+        <activity android:name=".widgets.activity.ContactActivity" />
+        <activity android:name=".widgets.activity.ViewImageActivity" />
+        <activity android:name=".widgets.activity.ProfileActivity" />
+        <activity android:name=".widgets.activity.SettingActivity" />
+        <activity android:name=".widgets.activity.SetUserInfoActivity" />
+        <activity android:name=".widgets.activity.PhoneLoginActivity" />
+        <activity android:name=".widgets.activity.WelcomeActivity" />
+        <activity android:name=".widgets.activity.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".widgets.MainActivity" />
+        <activity android:name=".widgets.activity.MainActivity" />
     </application>
 
 </manifest>

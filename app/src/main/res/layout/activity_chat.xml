@@ -7,7 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#B8B6B6"
-        tools:context=".widgets.ChatActivity">
+        tools:context=".widgets.activity.ChatActivity">
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/app_bar"
@@ -70,11 +70,11 @@
             android:id="@+id/rv_chat"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingTop="@dimen/very_small"
             android:layout_above="@id/ll_chat_container"
             android:layout_below="@id/app_bar"
-            android:scrollbars="vertical"
-            android:background="#B8B6B6" />
+            android:background="#B8B6B6"
+            android:paddingTop="@dimen/very_small"
+            android:scrollbars="vertical" />
 
         <LinearLayout
             android:id="@+id/ll_chat_container"
@@ -87,7 +87,7 @@
             android:backgroundTint="@color/white"
             android:elevation="4dp"
             android:orientation="horizontal"
-            android:padding="@dimen/very_small">
+            android:padding="6dp">
 
             <ImageButton
                 android:id="@+id/ib_emoji"
@@ -110,7 +110,7 @@
                 android:hint="type a message"
                 android:inputType="textMultiLine"
                 android:maxLines="4"
-                android:padding="@dimen/very_small"
+                android:padding="6dp"
                 android:scrollHorizontally="true"
                 android:textColor="@color/primary_text"
                 android:textColorHint="@color/secondary_text"
@@ -138,7 +138,16 @@
                 app:srcCompat="@drawable/ic_camera"
                 app:tint="@color/secondary_text" />
 
+
         </LinearLayout>
+
+        <include
+            layout="@layout/layout_gallery"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/large"
+            android:layout_marginEnd="@dimen/large"
+            android:layout_above="@id/ll_chat_container" />
 
         <FrameLayout
             android:id="@+id/fl_container"
@@ -172,7 +181,6 @@
                 app:srcCompat="@drawable/ic_mic"
                 app:tint="@color/white" />
         </FrameLayout>
-
 
     </RelativeLayout>
 </layout>

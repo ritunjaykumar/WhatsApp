@@ -1,15 +1,13 @@
-package com.softgyan.whatsapp.widgets;
+package com.softgyan.whatsapp.widgets.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -18,6 +16,9 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.softgyan.whatsapp.R;
 import com.softgyan.whatsapp.databinding.ActivityMainBinding;
+import com.softgyan.whatsapp.widgets.fragments.CallsFragment;
+import com.softgyan.whatsapp.widgets.fragments.ChatFragment;
+import com.softgyan.whatsapp.widgets.fragments.StatusFragment;
 
 import java.util.ArrayList;
 

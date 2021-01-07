@@ -17,7 +17,7 @@ import com.google.android.material.imageview.ShapeableImageView;
 import com.softgyan.whatsapp.R;
 import com.softgyan.whatsapp.models.Users;
 import com.softgyan.whatsapp.utils.variables.Var;
-import com.softgyan.whatsapp.widgets.ChatActivity;
+import com.softgyan.whatsapp.widgets.activity.ChatActivity;
 
 import java.util.List;
 

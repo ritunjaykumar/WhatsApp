@@ -1,4 +1,4 @@
-package com.softgyan.whatsapp.widgets;
+package com.softgyan.whatsapp.widgets.fragments;
 
 import android.os.Bundle;
 
@@ -14,9 +14,7 @@ import android.view.ViewGroup;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.softgyan.whatsapp.R;
 import com.softgyan.whatsapp.adapter.CallListAdapter;
-import com.softgyan.whatsapp.adapter.ChatListAdapter;
 import com.softgyan.whatsapp.models.CallList;
-import com.softgyan.whatsapp.models.ChatList;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.softgyan.whatsapp.widgets;
+package com.softgyan.whatsapp.widgets.activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -6,18 +6,13 @@ import androidx.databinding.DataBindingUtil;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.softgyan.whatsapp.R;
 import com.softgyan.whatsapp.adapter.ContactListsAdapter;
 import com.softgyan.whatsapp.databinding.ActivityContactBinding;

@@ -3,6 +3,7 @@ package com.softgyan.whatsapp.models;
 public class Chats {
     private String dateTime;
     private String textMessage;
+    private String imageUrl;
     private String type;
     private String sender;
     private String receiver;
@@ -10,12 +11,21 @@ public class Chats {
     public Chats() {
     }
 
-    public Chats(String dateTime, String textMessage, String type, String sender, String receiver) {
+    public Chats(String dateTime, String textMessage, String imageUrl, String type, String sender, String receiver) {
         this.dateTime = dateTime;
         this.textMessage = textMessage;
+        this.imageUrl = imageUrl;
         this.type = type;
         this.sender = sender;
         this.receiver = receiver;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public String getDateTime() {
