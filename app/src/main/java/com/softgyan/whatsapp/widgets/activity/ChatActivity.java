@@ -22,6 +22,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.devlomi.record_view.OnBasketAnimationEnd;
+import com.devlomi.record_view.OnRecordListener;
+import com.devlomi.record_view.RecordButton;
 import com.softgyan.whatsapp.R;
 import com.softgyan.whatsapp.adapter.ChatAdapter;
 import com.softgyan.whatsapp.databinding.ActivityChatBinding;
@@ -52,7 +55,7 @@ public class ChatActivity extends AppCompatActivity {
 
     private ActivityChatBinding mBinding;
     private String receiverId;
-    private ArrayList<Chats> chatsList = new ArrayList<>();
+    private final ArrayList<Chats> chatsList = new ArrayList<>();
     private ChatAdapter chatAdapter;
     private boolean isActionShow = false;
     private LinearLayout llGalleryContainer;
@@ -82,11 +85,11 @@ public class ChatActivity extends AppCompatActivity {
 //                Log.d("my_tag", "start : " + start + " before : " + before + " count : " + count);
                 if (s.length() == 0) {
                     mBinding.ibCamera.setVisibility(View.VISIBLE);
-                    mBinding.fabMic.setVisibility(View.VISIBLE);
-                    mBinding.fabSend.setVisibility(View.GONE);
+                    mBinding.rbRecord.setVisibility(View.VISIBLE);
+                    mBinding.fabSend.setVisibility(View.INVISIBLE);
                 } else {
                     mBinding.ibCamera.setVisibility(View.GONE);
-                    mBinding.fabMic.setVisibility(View.GONE);
+                    mBinding.rvRecordView.setVisibility(View.GONE);
                     mBinding.fabSend.setVisibility(View.VISIBLE);
                 }
             }
@@ -120,6 +123,42 @@ public class ChatActivity extends AppCompatActivity {
         findViewById(R.id.ll_gallery).setOnClickListener(view -> {
             openGallery();
             llGalleryContainer.setVisibility(View.GONE);
+        });
+
+        //initialize recording
+        mBinding.rbRecord.setRecordView(mBinding.rvRecordView);
+        mBinding.rvRecordView.setOnRecordListener(new OnRecordListener() {
+            @Override
+            public void onStart() {
+                mBinding.llChatContainer.setVisibility(View.GONE);
+                mBinding.rvRecordView.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onCancel() {
+            }
+
+            @Override
+            public void onFinish(long recordTime) {
+                mBinding.llChatContainer.setVisibility(View.VISIBLE);
+                mBinding.rvRecordView.setVisibility(View.GONE);
+
+
+            }
+
+            @Override
+            public void onLessThanSecond() {
+                mBinding.llChatContainer.setVisibility(View.VISIBLE);
+                mBinding.rvRecordView.setVisibility(View.GONE);
+
+            }
+        });
+        mBinding.rvRecordView.setOnBasketAnimationEndListener(new OnBasketAnimationEnd() {
+            @Override
+            public void onAnimationEnd() {
+                mBinding.llChatContainer.setVisibility(View.VISIBLE);
+                mBinding.rvRecordView.setVisibility(View.GONE);
+            }
         });
 
 
@@ -207,18 +246,18 @@ public class ChatActivity extends AppCompatActivity {
                     progressDialog.show();
                     new FirebaseServices(ChatActivity.this)
                             .uploadImageToFirebase(imageUri, new FirebaseServices.OnCallBack() {
-                        @Override
-                        public void onUploadSuccess(String imageUrl) {
-                            //send image chat image
-                            chatServices.sendImage(imageUrl);
-                            progressDialog.dismiss();
-                        }
+                                @Override
+                                public void onUploadSuccess(String imageUrl) {
+                                    //send image chat image
+                                    chatServices.sendImage(imageUrl);
+                                    progressDialog.dismiss();
+                                }
 
-                        @Override
-                        public void onUploadFailed(Exception e) {
-                            e.printStackTrace();
-                        }
-                    });
+                                @Override
+                                public void onUploadFailed(Exception e) {
+                                    e.printStackTrace();
+                                }
+                            });
                 }
             }
         });
