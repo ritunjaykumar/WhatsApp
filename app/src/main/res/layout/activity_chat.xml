@@ -70,13 +70,14 @@
             android:id="@+id/rv_chat"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@id/ll_chat_container"
+            android:layout_above="@id/constraint_layout"
             android:layout_below="@id/app_bar"
             android:background="#B8B6B6"
             android:paddingTop="@dimen/very_small"
             android:scrollbars="vertical" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraint_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
@@ -199,7 +200,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:slide_to_cancel_arrow="@drawable/recv_ic_arrow"
                 app:slide_to_cancel_arrow_color="@color/primary_text"
-                app:slide_to_cancel_bounds="@dimen/medium"
+                app:slide_to_cancel_bounds="@dimen/extreme_large"
                 app:slide_to_cancel_margin_right="@dimen/large"
                 app:slide_to_cancel_text="Slide to cancel" />
 

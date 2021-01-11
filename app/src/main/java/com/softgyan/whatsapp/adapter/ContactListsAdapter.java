@@ -18,6 +18,7 @@ import com.softgyan.whatsapp.R;
 import com.softgyan.whatsapp.models.Users;
 import com.softgyan.whatsapp.utils.variables.Var;
 import com.softgyan.whatsapp.widgets.activity.ChatActivity;
+import com.softgyan.whatsapp.widgets.activity.ContactActivity;
 
 import java.util.List;
 
@@ -33,7 +34,7 @@ public class ContactListsAdapter extends RecyclerView.Adapter<ContactListsAdapte
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.layout_contact_list,parent,false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.layout_contact_list, parent, false);
         return new ViewHolder(view);
     }
 
@@ -46,15 +47,21 @@ public class ContactListsAdapter extends RecyclerView.Adapter<ContactListsAdapte
                 .placeholder(R.drawable.ic_place_holder)
                 .into(holder.spiProfile);
 
-        holder.itemView.setOnClickListener(view->{
-            Intent intent =new Intent(mContext, ChatActivity.class);
+        holder.itemView.setOnClickListener(view -> {
+            Intent intent = new Intent(mContext, ChatActivity.class);
             Bundle bundle = new Bundle();
-            Log.d("my_tag","contact activity : "+ users.getUserId()); //debugging
+            Log.d("my_tag", "contact activity : " + users.getUserId()); //debugging
             bundle.putString(Var.USER_NAME, users.getUserName());
             bundle.putString(Var.USER_ID, users.getUserId());
             bundle.putString(Var.IMAGE_PROFILE, users.getImageProfile());
-            intent.putExtra(Var.USERS,bundle);
+            intent.putExtra(Var.USERS, bundle);
             mContext.startActivity(intent);
+
+            if (mContext instanceof ContactActivity) {
+                ((ContactActivity) mContext).finish();
+            }
+
+
         });
     }
 
@@ -63,7 +70,7 @@ public class ContactListsAdapter extends RecyclerView.Adapter<ContactListsAdapte
         return usersList.size();
     }
 
-    public static class ViewHolder  extends RecyclerView.ViewHolder{
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         private final ShapeableImageView spiProfile;
         private final TextView tvUserName;
         private final TextView tvStatus;

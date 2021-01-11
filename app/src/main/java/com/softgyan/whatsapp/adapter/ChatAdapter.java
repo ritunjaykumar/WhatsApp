@@ -5,6 +5,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Chronometer;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -26,6 +28,7 @@ public class ChatAdapter extends RecyclerView.Adapter {
     private final Context mContext;
     public static final int TEXT_TYPE = 1;
     public static final int IMAGE_TYPE = 2;
+    public static final int VOICE_TYPE = 3;
     private final FirebaseUser authUser;
     private int itemPosition = -1;
 
@@ -50,6 +53,8 @@ public class ChatAdapter extends RecyclerView.Adapter {
                 return TEXT_TYPE;
             case MessageType.IMAGE:
                 return IMAGE_TYPE;
+            case MessageType.VOICE:
+                return VOICE_TYPE;
             default:
                 return -1;
         }
@@ -76,6 +81,14 @@ public class ChatAdapter extends RecyclerView.Adapter {
                     view = layoutInflater.inflate(R.layout.layout_chat_image_left, parent, false);
                 }
                 return new ImageMessage(view);
+
+            case VOICE_TYPE:
+                if (chatsList.get(itemPosition).getSender().equals(authUser.getUid())) {
+                    view = layoutInflater.inflate(R.layout.layout_chat_voice_right, parent, false);
+                } else {
+                    view = layoutInflater.inflate(R.layout.layout_chat_voice_left, parent, false);
+                }
+                return new VoiceMessage(view);
         }
 
         return null;
@@ -84,16 +97,20 @@ public class ChatAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         String viewType = chatsList.get(position).getType();
-        Log.d("my_tag", viewType);
         switch (viewType) {
             case MessageType.TEXT:
-                ((TextMessage) holder).setTextMessage(chatsList.get(position));
-            case MessageType.IMAGE:
-                if(holder instanceof ImageMessage){
-                    ((ImageMessage) holder).setImageView(chatsList.get(position), mContext);
-                }else {
+                if (holder instanceof TextMessage) {
                     ((TextMessage) holder).setTextMessage(chatsList.get(position));
                 }
+            case MessageType.IMAGE:
+                if (holder instanceof ImageMessage) {
+                    ((ImageMessage) holder).setImageView(chatsList.get(position), mContext);
+                }
+            case MessageType.VOICE:
+                if (holder instanceof VoiceMessage) {
+                    ((VoiceMessage) holder).setVoiceData(chatsList.get(position));
+                }
+
         }
     }
 
@@ -126,6 +143,20 @@ public class ChatAdapter extends RecyclerView.Adapter {
 
         private void setImageView(Chats chats, Context context) {
             Glide.with(context).load(chats.getImageUrl()).into(imageView);
+        }
+    }
+
+    public static class VoiceMessage extends RecyclerView.ViewHolder {
+        private final ImageButton ibPlay;
+        private final Chronometer chronometer;
+
+        public VoiceMessage(@NonNull View itemView) {
+            super(itemView);
+            ibPlay = itemView.findViewById(R.id.ib_play);
+            chronometer = itemView.findViewById(R.id.cm_count_down);
+        }
+
+        private void setVoiceData(Chats chats) {
         }
     }
 }

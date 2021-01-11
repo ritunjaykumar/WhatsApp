@@ -2,12 +2,15 @@ package com.softgyan.whatsapp.managers;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.net.Uri;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -15,10 +18,14 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.softgyan.whatsapp.managers.interfaces.OnReadChatCallBack;
 import com.softgyan.whatsapp.models.Chats;
 import com.softgyan.whatsapp.utils.variables.MessageType;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -98,7 +105,7 @@ public class ChatServices {
 
     }
 
-    public void sendImage(String imageUrl){
+    public void sendImage(String imageUrl) {
         Chats chats = new Chats(
                 getCurrent(),
                 "",
@@ -137,7 +144,7 @@ public class ChatServices {
     }
 
 
-    public String getCurrent(){
+    public String getCurrent() {
         Date date = Calendar.getInstance().getTime();
         @SuppressLint("SimpleDateFormat") SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
         String today = dateFormat.format(date);
@@ -145,7 +152,72 @@ public class ChatServices {
 //        Calendar currentDateTime = Calendar.getInstance(); //todo time
 //        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a");
         String currentTime = "9:10 am"; //sdf.format(currentDateTime.getTime());
-        return today+", "+ currentTime;
+        return today + ", " + currentTime;
+    }
+
+    public void sendVoice(String audioPathLocal) {
+        final Uri voiceUri = Uri.fromFile(new File(audioPathLocal));
+        final StorageReference audioRef = FirebaseStorage
+                .getInstance().getReference()
+                .child("Chats/Voice/" + System.currentTimeMillis());
+        audioRef.putFile(voiceUri)
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        try {
+                            Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
+                            while (!uriTask.isSuccessful()) ;
+                            Uri downloadUri = uriTask.getResult();
+                            String voiceUrl = String.valueOf(downloadUri);
+                            assert authUser != null;
+                            Chats chats = new Chats(
+                                    getCurrent(),
+                                    "",
+                                    voiceUrl,
+                                    MessageType.VOICE,
+                                    authUser.getUid(),
+                                    receiverId
+                            );
+
+
+                            dbReference.child("Chats").push().setValue(chats).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Log.d("my_tag", "onSuccess : message sent");
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.d("my_tag", "onFailure : message failed " + e.getMessage());
+                                }
+                            });
+
+
+                            //add to sender chat list
+                            DatabaseReference chatRef1 = FirebaseDatabase.getInstance()
+                                    .getReference("ChatList")
+                                    .child(authUser.getUid()).child(receiverId);
+                            chatRef1.child("chat_id").setValue(receiverId);
+
+                            //add to receiver chat list
+                            DatabaseReference chatRef2 = FirebaseDatabase.getInstance()
+                                    .getReference("ChatList")
+                                    .child(receiverId).child(authUser.getUid());
+                            chatRef2.child("chat_id").setValue(authUser.getUid());
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(mContext, "Failed", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+
     }
 
 }

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/extreme_large"
+    android:layout_marginEnd="@dimen/very_small"
+    android:layout_marginTop="@dimen/very_small"
+    android:layout_marginBottom="@dimen/very_small"
+    android:gravity="end"
+    android:background="@android:color/transparent">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        android:paddingStart="@dimen/very_small"
+        android:paddingEnd="@dimen/small"
+        android:background="@drawable/bg_layout"
+        android:backgroundTint="@color/primary_light">
+
+        <ImageButton
+            android:id="@+id/ib_play"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@android:color/transparent"
+            app:srcCompat="@drawable/ic_play"
+            app:tint="@color/colorPrimary" />
+
+        <Chronometer
+            android:id="@+id/cm_count_down"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textColor="@color/colorPrimary" />
+    </LinearLayout>
+</LinearLayout>

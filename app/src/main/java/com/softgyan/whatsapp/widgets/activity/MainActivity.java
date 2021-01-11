@@ -32,22 +32,6 @@ public class MainActivity extends AppCompatActivity {
         setWithViewPager(binding.viewPager);
         binding.tabLayout.setupWithViewPager(binding.viewPager);
 
-//        binding.viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-//            @Override
-//            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-//
-//            }
-//
-//            @Override
-//            public void onPageSelected(int position) {
-//                changeFabIcon(position);
-//            }
-//
-//            @Override
-//            public void onPageScrollStateChanged(int state) {
-//
-//            }
-//        });
     }
 
     private void setWithViewPager(ViewPager viewPager) {
