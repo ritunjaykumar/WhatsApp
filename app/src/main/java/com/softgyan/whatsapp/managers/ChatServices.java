@@ -144,7 +144,7 @@ public class ChatServices {
     }
 
 
-    public String getCurrent() {
+    public static String getCurrent() {
         Date date = Calendar.getInstance().getTime();
         @SuppressLint("SimpleDateFormat") SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
         String today = dateFormat.format(date);

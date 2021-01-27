@@ -106,7 +106,7 @@
                     android:layout_width="@dimen/value_32"
                     android:layout_height="@dimen/value_32"
                     android:layout_gravity="center|bottom"
-                    android:background="@android:color/transparent"
+                    android:background="@color/transparent"
                     android:padding="2dp"
                     app:srcCompat="@drawable/ic_emoji"
                     app:tint="@color/secondary_text" />
@@ -134,7 +134,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center|bottom"
                     android:layout_marginStart="@dimen/very_small"
-                    android:background="@android:color/transparent"
+                    android:background="@color/transparent"
                     android:padding="2dp"
                     app:srcCompat="@drawable/ic_attacment"
                     app:tint="@color/secondary_text" />
@@ -145,7 +145,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center|bottom"
                     android:layout_marginEnd="@dimen/very_small"
-                    android:background="@android:color/transparent"
+                    android:background="@color/transparent"
                     android:padding="2dp"
                     app:srcCompat="@drawable/ic_camera"
                     app:tint="@color/secondary_text" />
@@ -206,16 +206,6 @@
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-        <include
-            layout="@layout/layout_gallery"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_above="@id/ll_chat_container"
-            android:layout_marginStart="@dimen/large"
-            android:layout_marginEnd="@dimen/large" />
-
 
     </RelativeLayout>
 </layout>

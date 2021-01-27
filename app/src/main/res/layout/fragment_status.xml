@@ -19,7 +19,7 @@
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@android:color/transparent">
+            android:background="@color/transparent">
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/siv_profile"
@@ -36,7 +36,7 @@
                 android:backgroundTint="@color/white"
                 android:layout_alignEnd="@id/siv_profile"
                 android:layout_alignBottom="@id/siv_profile"
-                android:background="@android:color/transparent"
+                android:background="@color/transparent"
                 android:src="@drawable/ic_plus_circle" />
         </RelativeLayout>
 
@@ -45,7 +45,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_marginStart="@dimen/small"
-            android:background="@android:color/transparent"
+            android:background="@color/transparent"
             android:orientation="vertical">
 
             <TextView

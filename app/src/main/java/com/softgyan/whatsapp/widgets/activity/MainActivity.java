@@ -17,10 +17,12 @@ import androidx.viewpager.widget.ViewPager;
 import com.softgyan.whatsapp.R;
 import com.softgyan.whatsapp.databinding.ActivityMainBinding;
 import com.softgyan.whatsapp.widgets.fragments.CallsFragment;
+import com.softgyan.whatsapp.widgets.fragments.CameraFragment;
 import com.softgyan.whatsapp.widgets.fragments.ChatFragment;
 import com.softgyan.whatsapp.widgets.fragments.StatusFragment;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
@@ -28,14 +30,22 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+
         setSupportActionBar(binding.toolBar);
         setWithViewPager(binding.viewPager);
         binding.tabLayout.setupWithViewPager(binding.viewPager);
+        binding.viewPager.setCurrentItem(1);
+        try {
+            Objects.requireNonNull(binding.tabLayout.getTabAt(0)).setCustomView(R.layout.layout_custom_camera_tab);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
     }
 
     private void setWithViewPager(ViewPager viewPager) {
         MainActivity.SelectionPagerAdapter adapter = new SelectionPagerAdapter(getSupportFragmentManager());
+        adapter.addFragment(CameraFragment.getInstance(), getString(R.string.Camera));
         adapter.addFragment(ChatFragment.getInstance(), getString(R.string.chat));
         adapter.addFragment(StatusFragment.getInstance(), getString(R.string.status));
         adapter.addFragment(CallsFragment.getInstance(), getString(R.string.calls));

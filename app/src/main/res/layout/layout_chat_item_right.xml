@@ -7,7 +7,7 @@
     android:layout_marginStart="@dimen/value_32"
     android:layout_marginEnd="@dimen/very_small"
     android:layout_marginBottom="4dp"
-    android:background="@android:color/transparent"
+    android:background="@color/transparent"
     android:elevation="@dimen/elevation_max"
     android:orientation="vertical">
 

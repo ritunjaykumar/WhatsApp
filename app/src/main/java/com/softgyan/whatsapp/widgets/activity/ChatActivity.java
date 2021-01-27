@@ -7,10 +7,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Vibrator;
 import android.provider.MediaStore;
 import android.text.Editable;
@@ -19,8 +19,6 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -33,19 +31,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.devlomi.record_view.OnBasketAnimationEnd;
 import com.devlomi.record_view.OnRecordListener;
-import com.devlomi.record_view.RecordButton;
-import com.google.firebase.storage.FirebaseStorage;
 import com.softgyan.whatsapp.R;
 import com.softgyan.whatsapp.adapter.ChatAdapter;
 import com.softgyan.whatsapp.databinding.ActivityChatBinding;
 import com.softgyan.whatsapp.dialog.DialogReviewSendImage;
+import com.softgyan.whatsapp.dialog.GalleryDialog;
 import com.softgyan.whatsapp.managers.ChatServices;
 import com.softgyan.whatsapp.managers.interfaces.OnReadChatCallBack;
 import com.softgyan.whatsapp.models.Chats;
 import com.softgyan.whatsapp.servieces.FirebaseServices;
 import com.softgyan.whatsapp.utils.variables.Var;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -72,13 +68,12 @@ public class ChatActivity extends AppCompatActivity {
     private String receiverId;
     private final ArrayList<Chats> chatsList = new ArrayList<>();
     private ChatAdapter chatAdapter;
-    private boolean isActionShow = false;
-    private LinearLayout llGalleryContainer;
     private ChatServices chatServices;
 
     private MediaRecorder mediaRecorder;
     private String audioPath;
     private String sTime;
+    private MediaPlayer mediaPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,8 +85,6 @@ public class ChatActivity extends AppCompatActivity {
             Bundle bundle = getIntent().getBundleExtra(Var.USERS);
             setData(bundle);
         }
-
-        llGalleryContainer = findViewById(R.id.ll_gallery_container);
 
         mBinding.etMessage.addTextChangedListener(new TextWatcher() {
             @Override
@@ -129,20 +122,12 @@ public class ChatActivity extends AppCompatActivity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         layoutManager.setStackFromEnd(true);
         mBinding.rvChat.setLayoutManager(layoutManager);
-        chatAdapter = new ChatAdapter(chatsList, this);
+        chatAdapter = new ChatAdapter(chatsList, this, mediaPlayer -> this.mediaPlayer = mediaPlayer);
         mBinding.rvChat.setAdapter(chatAdapter);
         mBinding.ibAttachment.setOnClickListener(view -> {
-            if (isActionShow) {
-                llGalleryContainer.setVisibility(View.GONE);
-            } else {
-                llGalleryContainer.setVisibility(View.VISIBLE);
-            }
-            isActionShow = !isActionShow;
+            openGalleryDialog();
         });
-        findViewById(R.id.ll_gallery).setOnClickListener(view -> {
-            openGallery();
-            llGalleryContainer.setVisibility(View.GONE);
-        });
+
 
         //initialize recording
         mBinding.rbRecord.setRecordView(mBinding.rvRecordView);
@@ -168,7 +153,7 @@ public class ChatActivity extends AppCompatActivity {
                     mediaRecorder.reset();
                     mediaRecorder.stop();
                 } catch (Exception e) {
-                    Log.d(TAG, "onCancel: "+e.getMessage());
+                    Log.d(TAG, "onCancel: " + e.getMessage());
                 }
 
             }
@@ -193,10 +178,10 @@ public class ChatActivity extends AppCompatActivity {
                 Log.d("my_tag", "onLessThanSecond");
                 mBinding.llChatContainer.setVisibility(View.VISIBLE);
                 mBinding.rvRecordView.setVisibility(View.GONE);
-                try{
+                try {
                     mediaRecorder = null;
-                }catch (Exception e){
-                    Log.d(TAG, "onLessThanSecond: "+e.getMessage());
+                } catch (Exception e) {
+                    Log.d(TAG, "onLessThanSecond: " + e.getMessage());
                 }
             }
         });
@@ -247,6 +232,18 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if (mediaPlayer != null) {
+            try {
+                mediaPlayer.stop();
+            } catch (Exception e) {
+                Log.d(TAG, "onBackPressed: " + e.getMessage());
+            }
+        }
+    }
+
+    @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == android.R.id.home) {
@@ -280,9 +277,10 @@ public class ChatActivity extends AppCompatActivity {
         try {
             mediaRecorder.prepare();
             mediaRecorder.start();
-            Log.d(TAG, "startRecording: recording started "+ mediaRecorder.toString());
+            Log.d(TAG, "startRecording: recording started " + mediaRecorder.toString());
         } catch (Exception e) {
-            Log.d(TAG, "startRecording: "+e.getMessage());;
+            Log.d(TAG, "startRecording: " + e.getMessage());
+            ;
         }
     }
 
@@ -297,7 +295,7 @@ public class ChatActivity extends AppCompatActivity {
                 chatServices.sendVoice(audioPath);
                 Log.d(TAG, "stopRecording: sending audio");
             } catch (Exception e) {
-                Log.d(TAG, "stopRecording: "+e.getMessage());
+                Log.d(TAG, "stopRecording: " + e.getMessage());
             }
 
         }
@@ -308,7 +306,7 @@ public class ChatActivity extends AppCompatActivity {
         String pathSave = getExternalFilesDir("/").getAbsolutePath() +
                 "/" + UUID.randomUUID().toString() + "audio_recorder.3gp";
         audioPath = pathSave;
-        Log.d(TAG, "setUpMediaRecorder: audio pat "+ audioPath );
+        Log.d(TAG, "setUpMediaRecorder: audio pat " + audioPath);
         mediaRecorder = new MediaRecorder();
         Log.d(TAG, "setUpMediaRecorder: recorder started");
         try {
@@ -318,11 +316,20 @@ public class ChatActivity extends AppCompatActivity {
             mediaRecorder.setOutputFile(pathSave);
 
         } catch (Exception e) {
-            Log.d(TAG, "setUpMediaRecorder: "+e.getMessage());
+            Log.d(TAG, "setUpMediaRecorder: " + e.getMessage());
         }
     }
 
-    //****************************************open gallery send images*********************************************//
+    //****************************************open gallery send images*************************
+    private void openGalleryDialog() {
+        new GalleryDialog(this, new GalleryDialog.GalleryCallback() {
+            @Override
+            public void onGalleryClick() {
+                openGallery();
+            }
+        }).show();
+    }
+
     private void openGallery() {
         Intent intent = new Intent();
         intent.setType("image/*");

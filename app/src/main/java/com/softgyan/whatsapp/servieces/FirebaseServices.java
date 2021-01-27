@@ -5,14 +5,16 @@ import android.content.Context;
 import android.net.Uri;
 import android.webkit.MimeTypeMap;
 
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.softgyan.whatsapp.utils.variables.Var;
-
-import java.util.HashMap;
+import com.softgyan.whatsapp.models.StatusModel;
 
 public class FirebaseServices {
     private final Context mContext;
@@ -45,8 +47,40 @@ public class FirebaseServices {
         MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
         return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri));
     }
-    public interface OnCallBack{
+
+    public void addNewStatus(StatusModel statusModel, OnAddStatusCallBack callBack) {
+
+        FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+        firebaseFirestore.collection("Status_Daily")
+                .document(statusModel.getId())
+                .set(statusModel)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        callBack.success();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull  Exception e) {
+                        callBack.failed(e);
+                    }
+                });
+
+
+
+    }
+
+
+    public interface OnCallBack {
         void onUploadSuccess(String imageUrl);
+
         void onUploadFailed(Exception e);
+    }
+
+    public interface OnAddStatusCallBack {
+        void success();
+
+        void failed(Exception e);
     }
 }

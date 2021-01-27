@@ -5,16 +5,19 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_above="@id/ll_chat_container"
+    android:layout_gravity="bottom"
     android:layout_marginStart="@dimen/large"
     android:layout_marginEnd="@dimen/large"
+    android:layout_marginBottom="@dimen/very_small"
     android:background="@drawable/bg_layout"
     android:backgroundTint="@color/white"
     android:elevation="4dp"
     android:orientation="vertical"
     android:padding="@dimen/small"
-    android:visibility="gone">
+    android:visibility="visible">
 
     <LinearLayout
+        android:id="@+id/layout_1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal">
@@ -96,6 +99,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/layout_2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="@dimen/very_small"

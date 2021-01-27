@@ -5,29 +5,46 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginStart="@dimen/extreme_large"
-    android:layout_marginEnd="@dimen/very_small"
     android:layout_marginTop="@dimen/very_small"
+    android:layout_marginEnd="@dimen/very_small"
     android:layout_marginBottom="@dimen/very_small"
-    android:gravity="end"
-    android:background="@android:color/transparent">
+    android:background="@color/transparent"
+    android:gravity="end">
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingTop="4dp"
-        android:paddingBottom="4dp"
+        android:background="@drawable/bg_right_chat_item"
+        android:backgroundTint="@color/primary_light"
         android:paddingStart="@dimen/very_small"
+        android:paddingTop="4dp"
         android:paddingEnd="@dimen/small"
-        android:background="@drawable/bg_layout"
-        android:backgroundTint="@color/primary_light">
+        android:paddingBottom="4dp">
 
-        <ImageButton
-            android:id="@+id/ib_play"
+        <FrameLayout
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:background="@android:color/transparent"
-            app:srcCompat="@drawable/ic_play"
-            app:tint="@color/colorPrimary" />
+            android:background="@color/transparent">
+
+            <ImageButton
+                android:id="@+id/ib_pause"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/transparent"
+                app:srcCompat="@drawable/ic_pasuse"
+                android:visibility="gone"
+                app:tint="@color/colorPrimary" />
+
+            <ImageButton
+                android:id="@+id/ib_play"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/transparent"
+                app:srcCompat="@drawable/ic_play"
+                app:tint="@color/colorPrimary" />
+
+        </FrameLayout>
+
 
         <Chronometer
             android:id="@+id/cm_count_down"

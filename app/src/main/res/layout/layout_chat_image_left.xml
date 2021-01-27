@@ -5,6 +5,7 @@
     android:layout_marginStart="@dimen/very_small"
     android:layout_marginTop="@dimen/very_small"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:transitionName="image"
     android:orientation="vertical">
 
     <androidx.cardview.widget.CardView

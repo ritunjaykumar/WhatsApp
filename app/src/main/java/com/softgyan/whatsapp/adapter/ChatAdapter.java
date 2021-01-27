@@ -1,7 +1,11 @@
 package com.softgyan.whatsapp.adapter;
 
+import android.app.Activity;
 import android.content.Context;
-import android.util.Log;
+import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.media.MediaPlayer;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,8 +13,10 @@ import android.widget.Chronometer;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityOptionsCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -18,7 +24,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.softgyan.whatsapp.R;
 import com.softgyan.whatsapp.models.Chats;
+import com.softgyan.whatsapp.tools.AudioService;
+import com.softgyan.whatsapp.utils.common.Common;
 import com.softgyan.whatsapp.utils.variables.MessageType;
+import com.softgyan.whatsapp.widgets.activity.ViewImageActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,11 +40,15 @@ public class ChatAdapter extends RecyclerView.Adapter {
     public static final int VOICE_TYPE = 3;
     private final FirebaseUser authUser;
     private int itemPosition = -1;
+    private final AudioService audioService;
+    private OnChatAdapterCallback callback;
 
-    public ChatAdapter(List<Chats> chatsList, Context mContext) {
+    public ChatAdapter(List<Chats> chatsList, Context mContext, OnChatAdapterCallback callback) {
         this.chatsList = chatsList;
         this.mContext = mContext;
         authUser = FirebaseAuth.getInstance().getCurrentUser();
+        this.audioService = new AudioService();
+        this.callback = callback;
     }
 
     public void setChatsList(ArrayList<Chats> chatsList) {
@@ -143,20 +156,69 @@ public class ChatAdapter extends RecyclerView.Adapter {
 
         private void setImageView(Chats chats, Context context) {
             Glide.with(context).load(chats.getImageUrl()).into(imageView);
+            itemView.setOnClickListener(view -> {
+                imageView.invalidate();
+                Drawable dr = imageView.getDrawable();
+                Common.BIT_MAP = ((BitmapDrawable) dr.getCurrent()).getBitmap();
+                ActivityOptionsCompat aoCompact = ActivityOptionsCompat
+                        .makeSceneTransitionAnimation((Activity) itemView.getContext(), imageView, "image");
+                Intent intent = new Intent(itemView.getContext(), ViewImageActivity.class);
+                itemView.getContext().startActivity(intent, aoCompact.toBundle());
+
+            });
         }
     }
 
-    public static class VoiceMessage extends RecyclerView.ViewHolder {
+    public class VoiceMessage extends RecyclerView.ViewHolder {
         private final ImageButton ibPlay;
         private final Chronometer chronometer;
+        private final ImageButton ibPause;
 
         public VoiceMessage(@NonNull View itemView) {
             super(itemView);
             ibPlay = itemView.findViewById(R.id.ib_play);
+            ibPause = itemView.findViewById(R.id.ib_pause);
             chronometer = itemView.findViewById(R.id.cm_count_down);
         }
 
         private void setVoiceData(Chats chats) {
+            ibPlay.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(mContext, "waiting for downloading", Toast.LENGTH_LONG).show();
+                    setLayoutGone(ibPlay);
+                    setLayoutVisible(ibPause);
+                    audioService.playAudioFromUrl(chats.getImageUrl(), new AudioService.OnAudioServiceCallBack() {
+                        @Override
+                        public void onFinish() {
+                            setLayoutGone(ibPause);
+                            setLayoutVisible(ibPlay);
+                        }
+
+                        @Override
+                        public void onStart(MediaPlayer mediaPlayer) {
+                            callback.onGetAudio(mediaPlayer);
+                        }
+                    });
+                }
+            });
         }
+
+        private void setLayoutVisible(View... views) {
+            for (View view : views) {
+                view.setVisibility(View.VISIBLE);
+            }
+        }
+
+        private void setLayoutGone(View... views) {
+            for (View view : views) {
+                view.setVisibility(View.GONE);
+            }
+        }
+    }
+
+
+    public interface OnChatAdapterCallback {
+        void onGetAudio(MediaPlayer mediaPlayer);
     }
 }

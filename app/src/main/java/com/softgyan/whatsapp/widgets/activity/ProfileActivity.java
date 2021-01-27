@@ -11,6 +11,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.MenuItem;
@@ -25,6 +26,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 import androidx.databinding.DataBindingUtil;
 
 import com.bumptech.glide.Glide;
@@ -37,6 +39,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.softgyan.whatsapp.BuildConfig;
 import com.softgyan.whatsapp.R;
 import com.softgyan.whatsapp.databinding.ActivityProfileBinding;
 import com.softgyan.whatsapp.utils.UserDetails;
@@ -44,11 +47,15 @@ import com.softgyan.whatsapp.utils.common.Common;
 import com.softgyan.whatsapp.utils.database.ServerData;
 import com.softgyan.whatsapp.utils.variables.Var;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Objects;
+import java.util.UUID;
 
 public class ProfileActivity extends AppCompatActivity {
     private static final int STORAGE_REQUEST_CODE = 2;
+    private static final int CAMERA_REQUEST_CODE = 101;
     public static int GALLERY_REQUEST_CODE = 1;
 
     private ActivityProfileBinding mBinding;
@@ -63,7 +70,7 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_profile);
         setSupportActionBar(mBinding.toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         db = FirebaseFirestore.getInstance();
         authUser = FirebaseAuth.getInstance().getCurrentUser();
         progressDialog = new ProgressDialog(this);
@@ -148,12 +155,38 @@ public class ProfileActivity extends AppCompatActivity {
         });
         bottomSheetDialog.findViewById(R.id.ll_camera).setOnClickListener(view -> {
 
-            Toast.makeText(this, "camera under construction", Toast.LENGTH_SHORT).show();
+            checkCameraPermission();
             bottomSheetDialog.dismiss();
         });
         bottomSheetDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         bottomSheetDialog.setOnCancelListener(dialog -> bottomSheetDialog = null);
         bottomSheetDialog.show();
+
+    }
+
+    private void checkCameraPermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, CAMERA_REQUEST_CODE);
+        } else if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, 222);
+        } else {
+            openCamera();
+        }
+    }
+
+    private void openCamera() {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        String uniqueId = UUID.randomUUID().toString().substring(0, 15);
+        String fileName = uniqueId + ".jpg";
+        try {
+            File file = File.createTempFile(uniqueId, ".jpg", getExternalFilesDir(Environment.DIRECTORY_PICTURES));
+            imageUri = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID + ".provider", file);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+            intent.putExtra("listPhotoName", fileName);
+            startActivityForResult(intent, 444);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -197,6 +230,12 @@ public class ProfileActivity extends AppCompatActivity {
                 uploadImageToFirebase();
             }
         }
+        if (requestCode == 444 && resultCode == RESULT_OK) {
+            uploadImageToFirebase();
+
+        }
+
+
     }
 
     @Override

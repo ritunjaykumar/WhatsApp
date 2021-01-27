@@ -8,6 +8,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         tools:context=".widgets.activity.ReviewImageChatActivity">
+
         <com.jsibbold.zoomage.ZoomageView
             android:id="@+id/zv_image"
             android:layout_width="match_parent"
@@ -36,13 +37,13 @@
             android:id="@+id/fab_send"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:clickable="true"
-            android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
             android:layout_margin="@dimen/medium"
-            app:tint="@color/white"
+            android:clickable="true"
+            android:focusable="true"
             app:srcCompat="@drawable/ic_send"
-            android:focusable="true" />
+            app:tint="@color/white" />
 
 
     </RelativeLayout>

@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.softgyan.whatsapp.R;
+import com.softgyan.whatsapp.dialog.DialogViewUser;
 import com.softgyan.whatsapp.models.ChatList;
 import com.softgyan.whatsapp.utils.variables.Var;
 import com.softgyan.whatsapp.widgets.activity.ChatActivity;
@@ -51,6 +52,18 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ChatVi
             bundle.putString(Var.IMAGE_PROFILE, chatList.getUrlProfile());
             intent.putExtra(Var.USERS,bundle);
             holder.itemView.getContext().startActivity(intent);
+        });
+        holder.ivProfile.setOnClickListener(view->{
+            new DialogViewUser(holder.itemView.getContext(), chatList,
+                    () -> {
+                        Intent intent =new Intent(holder.itemView.getContext(), ChatActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putString(Var.USER_NAME, chatList.getUserName());
+                        bundle.putString(Var.USER_ID, chatList.getUserId());
+                        bundle.putString(Var.IMAGE_PROFILE, chatList.getUrlProfile());
+                        intent.putExtra(Var.USERS,bundle);
+                        holder.itemView.getContext().startActivity(intent);
+                    });
         });
     }
 
